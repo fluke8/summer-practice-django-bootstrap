@@ -13,6 +13,12 @@ class UserRegisterForm(UserCreationForm):
         fields = ['username', 'email', 'password1', 'password2']
 
 
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('photo', )
+
+
 class RecipeForm(ModelForm):
     class Meta:
         model = Recipe

@@ -53,9 +53,11 @@ def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
+
             form.save()
             username = form.cleaned_data.get('username')
             messages.success(request, f'Создан аккаунт {username}!')
+            Profile(user=User.objects.get(username=form.cleaned_data['username']), ).save()
             return redirect('home')
     else:
         form = UserRegisterForm()
@@ -64,4 +66,10 @@ def register(request):
 
 @login_required
 def profile(request):
+    profile_form = UserProfileForm(data=request.POST)
+    profile = profile_form.save(commit=False)
+    profile.user = request.user
+    if 'photo' in request.FILES:
+        profile.photo = request.FILES['photo']
+    profile.save()
     return render(request, 'main/profile.html')
