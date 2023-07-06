@@ -1,0 +1,25 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+    <h1>Главная страница</h1>
+    <p>Текст</p>
+    {% if recipe %}
+        {% for element in recipe %}
+            <div class="alert alert-warning mt-2">
+                <a href="post/{{element.id}}"><h3>{{element.name}}</h3></a>
+                <p>{{element.description}}</p>
+                <p>{{element.author}}</p>
+                <p>{{element.date_posted}}</p>
+                {% if element.img %}
+                    <img height="200px" src="media/{{element.img}}" alt="">
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Нет записей</p>
+    {% endif %}
+{% endblock %}

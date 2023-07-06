@@ -1,0 +1,14 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+    {{ post.name }}
+{% endblock %}
+
+{% block content %}
+{{ post.name }}<br>
+{{ post.description }}<br>
+<img src="/media/{{ post.img }}" alt=""><br>
+<p>{{ post.author }}</p>
+{{ post.views }}<br>
+{{ post.likes }}<br>
+{% endblock %}
