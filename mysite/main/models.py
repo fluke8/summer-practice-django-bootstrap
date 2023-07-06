@@ -7,6 +7,7 @@ class Recipe(models.Model):
     id = models.IntegerField(null=False, primary_key=True)
     name = models.CharField(max_length=20)
     description = models.TextField()
+    tags = models.CharField(max_length=40, blank=True)
     date_posted = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     img = models.ImageField(null=True, blank=True, upload_to="img/")

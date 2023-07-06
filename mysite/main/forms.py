@@ -22,11 +22,12 @@ class UserProfileForm(forms.ModelForm):
 class RecipeForm(ModelForm):
     class Meta:
         model = Recipe
-        fields = ["name", "description", "img"]
+        fields = ["name", "description", "img", "tags"]
         labels = {
             'name': '',
             'description': '',
             'img': '',
+            'tags': ''
         }
         widgets = {
             "name": TextInput(attrs={
@@ -36,5 +37,9 @@ class RecipeForm(ModelForm):
             "description": Textarea(attrs={
                 'class': 'form-control',
                 'placeholder': 'Введите описание'
+            }),
+            "tags": TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Введите теги через запятую'
             })
         }

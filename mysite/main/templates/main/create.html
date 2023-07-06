@@ -12,6 +12,7 @@
         {% csrf_token %}
         {{ form.name }}<br>
         {{ form.description }}<br>
+        {{ form.tags }}
         {{ form.img }}
         <button type="submit" class="btn btn-success">Добавить</button>
         <span>{{error}}</span>

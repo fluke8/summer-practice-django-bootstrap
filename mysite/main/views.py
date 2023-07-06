@@ -10,7 +10,7 @@ def index(request):
     search_query = request.GET.get('search', '')
 
     if search_query:
-        recipe = Recipe.objects.filter(Q(name__icontains=search_query) | Q(description__icontains=search_query))
+        recipe = Recipe.objects.filter(Q(name__icontains=search_query) | Q(description__icontains=search_query) | Q(tags__icontains=search_query))
     else:
         recipe = Recipe.objects.all()
 
@@ -28,6 +28,7 @@ def create(request):
         if form.is_valid():
             new_topic = form.save(commit=False)
             new_topic.author = request.user
+            new_topic.tags = new_topic.tags.title()
             new_topic.save()
             return redirect('home')
         else:
