@@ -68,9 +68,10 @@ def register(request):
 @login_required
 def profile(request):
     profile_form = UserProfileForm(data=request.POST)
-    profile = profile_form.save(commit=False)
-    profile.user = request.user
-    if 'photo' in request.FILES:
-        profile.photo = request.FILES['photo']
-    profile.save()
+
+    if profile_form.is_valid():
+        profile = profile_form.save(commit=False)
+        profile.user = request.user
+        if 'photo' in request.FILES:
+            profile.photo = request.FILES['photo']
     return render(request, 'main/profile.html')
