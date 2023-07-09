@@ -1,5 +1,5 @@
 from .models import *
-from django.forms import ModelForm, TextInput, Textarea
+from django.forms import ModelForm, TextInput, Textarea, SelectMultiple, Select
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
@@ -20,26 +20,26 @@ class UserProfileForm(forms.ModelForm):
 
 
 class RecipeForm(ModelForm):
+    category = forms.ModelChoiceField(queryset=Category.objects.all(),
+                                      widget=forms.Select(attrs={'class': 'form-control'}))
+    ingredients = forms.ModelMultipleChoiceField(queryset=Ingredient.objects.all(),
+                                                 widget=forms.SelectMultiple(attrs={'class': 'form-control'}))
+
+    new_ingredients = forms.CharField(label='Новые ингредиенты', required=False)
+
     class Meta:
         model = Recipe
-        fields = ["name", "description", "img", "tags"]
-        labels = {
-            'name': '',
-            'description': '',
-            'img': '',
-            'tags': ''
-        }
-        widgets = {
-            "name": TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Введите название'
-            }),
-            "description": Textarea(attrs={
-                'class': 'form-control',
-                'placeholder': 'Введите описание'
-            }),
-            "tags": TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Введите теги через запятую'
-            })
-        }
+        fields = ['name', 'description', 'img', 'category', 'ingredients', 'new_ingredients']
+
+    def save(self, commit=True):
+        new_ingredients_names = self.cleaned_data.get('new_ingredients')
+        if new_ingredients_names:
+            ingredient_names = [name.strip() for name in new_ingredients_names.split(',')]
+            for name in ingredient_names:
+                ingredient, created = Ingredient.objects.get_or_create(name=name)
+                self.cleaned_data['ingredients'] = list(self.cleaned_data['ingredients']) + [ingredient]
+        return super().save(commit=commit)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['new_ingredients'].widget.attrs.update({'class': 'form-control'})

@@ -4,15 +4,29 @@ from .forms import *
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-
+from django.views import View
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.decorators.http import require_http_methods
 
 def index(request):
     search_query = request.GET.get('search', '')
+    category = request.GET.get('category', '')
+    ingredient = request.GET.get('ingredient', '')
+
+    recipe = Recipe.objects.all()
 
     if search_query:
-        recipe = Recipe.objects.filter(Q(name__icontains=search_query) | Q(description__icontains=search_query) | Q(tags__icontains=search_query))
-    else:
-        recipe = Recipe.objects.all()
+        recipe = recipe.filter(
+            Q(name__icontains=search_query) | Q(description__icontains=search_query) | Q(ingredients__name__icontains=search_query) | Q(category__name__icontains=search_query)
+        )
+
+    if category:
+        recipe = recipe.filter(category=category)
+
+    if ingredient:
+        recipe = recipe.filter(ingredients=ingredient)
 
     return render(request, 'main/index.html', {'title': 'Главная страница сайта', 'recipe': recipe})
 
@@ -64,6 +78,24 @@ def register(request):
         form = UserRegisterForm()
     return render(request, 'main/register.html', {'form': form})
 
+
+@login_required
+def like(request, pk):
+    post = get_object_or_404(Recipe, pk=pk)
+    if request.method == 'POST':
+        is_like = False
+
+        for like in post.likes.all():
+            if like == request.user:
+                is_like = True
+                break
+
+        if not is_like:
+            post.likes.add(request.user)
+        else:
+            post.likes.remove(request.user)
+
+    return redirect(request.META.get('HTTP_REFERER'))
 
 @login_required
 def profile(request):
