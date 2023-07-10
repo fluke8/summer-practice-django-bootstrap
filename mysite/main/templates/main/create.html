@@ -1,22 +1,23 @@
 {% extends 'main/base.html' %}
-
+{% load crispy_forms_tags %}
 {% block title %}
     Создать рецепт
 {% endblock %}
 
 {% block content %}
-    <h1>Создать рецепт</h1>
-    <p>Текст</p>
+    <div class="container">
+        <h1>Создать рецепт</h1>
+        <p>Текст</p>
 
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.name }}<br>
-        {{ form.description }}<br>
-        {{ form.img }}<br>
-        {{ form.category.as_widget }}<br>
-        {{ form.ingredients.as_widget }}<br>
-        {{ form.new_ingredients }}<br>
-        <button type="submit" class="btn btn-success">Добавить</button>
-        <span>{{error}}</span>
-    </form>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% crispy form %}
+
+            <div class="form-group">
+                <div class="col-lg-offset-2 col-lg-10">
+                    {{ form.submit|safe }}
+                </div>
+            </div>
+        </form>
+    </div>
 {% endblock %}

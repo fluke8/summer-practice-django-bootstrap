@@ -4,6 +4,8 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .models import Ingredient
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
 
 
 class UserRegisterForm(UserCreationForm):
@@ -21,14 +23,15 @@ class UserProfileForm(forms.ModelForm):
 
 
 class RecipeForm(ModelForm):
-    category = forms.ModelChoiceField(queryset=Category.objects.all(),
-                                      widget=forms.Select(attrs={'class': 'form-control'}))
-    ingredients = forms.ModelMultipleChoiceField(queryset=Ingredient.objects.all(),
-                                                 widget=forms.SelectMultiple(attrs={'class': 'form-control'}))
-
     class Meta:
         model = Recipe
         fields = ['name', 'description', 'img', 'category', 'ingredients']
+
+        widgets = {
+            'img': forms.ClearableFileInput(
+                attrs={'class': 'clearablefileinput form-control-file', 'id': 'id_img', 'label': ''})
+        }
+
 
     def save(self, commit=True):
         recipe = super().save(commit=commit)
@@ -36,3 +39,9 @@ class RecipeForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-lg-2'
+        self.helper.field_class = 'col-lg-10'
+        self.helper.add_input(Submit('submit', 'Добфаываыавить', css_class='btn btn-danger'))
