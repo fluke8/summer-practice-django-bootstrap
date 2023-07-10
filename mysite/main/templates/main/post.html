@@ -5,10 +5,18 @@
 {% endblock %}
 
 {% block content %}
-{{ post.name }}<br>
-{{ post.description }}<br>
-<img src="/media/{{ post.img }}" alt=""><br>
-<p>{{ post.author }}</p>
-{{ post.views }}<br>
-{{ post.total_likes }}<br>
+<div class="alert alert-warning mt-2">
+
+ <!-- Ссылка на профиль создателя поста -->
+        <h3>{{ post.name }}</h3>
+
+    <p>{{ post.description }}</p>
+    <a href="{% url 'profile' post.author.username %}">
+    <p>{{ post.author }}</p>
+    </a>
+    <p>{{ post.date_posted }}</p>
+    {% if post.author.userprofile.photo %}  <!-- Проверка наличия аватарки профиля -->
+        <img src="{{ post.author.userprofile.photo.url }}" alt="Avatar">  <!-- Отображение аватарки профиля -->
+    {% endif %}
+</div>
 {% endblock %}

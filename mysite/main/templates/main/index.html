@@ -1,49 +1,69 @@
 {% extends 'main/base.html' %}
 {% load static %}
+
 {% block title %}
     {{ title }}
 {% endblock %}
 
 {% block content %}
     <h1>Главная страница</h1>
-    <p>Текст</p>
     <form method="get" action="{% url 'home' %}">
-  <input type="text" name="search" placeholder="Поиск...">
+        <input type="text" name="search" placeholder="Поиск...">
 
-  <select name="category">
-    <option value="">Все категории</option>
-    <option value="1">Азиатская кухня</option>
-    <option value="2">Французская кухня</option>
-    <!-- Добавьте остальные варианты категорий -->
-  </select>
+        <select name="category">
+            <option value="">Все категории</option>
+            <option value="1">Итальянская кухня</option>
+            <option value="2">Французская кухня</option>
+            <option value="3">Китайская кухня</option>
+            <option value="4">Японская кухня</option>
+            <option value="5">Индийская кухня</option>
+            <option value="6">Мексиканская кухня</option>
+            <option value="7">Таиландская кухня</option>
+            <option value="8">Греческая кухня</option>
+            <option value="9">Испанская кухня</option>
+            <option value="10">Марокканская кухня</option>
+            <option value="11">Турецкая кухня</option>
+            <option value="12">Бразильская кухня</option>
+            <option value="13">Русская кухня</option>
+            <option value="14">Аргентинская кухня</option>
+            <option value="15">Шведская кухня</option>
+            <option value="16">Южноиндийская кухня</option>
+            <option value="17">Корейская кухня</option>
+            <option value="18">Вьетнамская кухня</option>
+            <option value="19">Ливанская кухня</option>
+            <option value="20">Эфиопская кухня</option>
+        </select>
 
-  <select name="ingredient">
-    <option value="">Все ингредиенты</option>
-    <option value="Жопа муравья">Жопа муравья</option>
-    <option value="Хуй гарилы">Хуй гарилы</option>
-    <!-- Добавьте остальные варианты ингредиентов -->
-  </select>
+        <select name="ingredient" id="ingredient">
+            <option value="">Все ингредиенты</option>
+            {% for ingredient in ingredients %}
+                <option value="{{ ingredient.name }}">{{ ingredient.name }}</option>
+            {% endfor %}
+        </select>
 
-  <button type="submit">Применить</button>
-</form>
+        <button type="submit">Применить</button>
+    </form>
+
     {% if recipe %}
         {% for element in recipe %}
             <div class="alert alert-warning mt-2">
-                <a href="post/{{element.id}}"><h3>{{element.name}}</h3></a>
-                <p>{{element.description}}</p>
-                <p>{{element.author}}</p>
-                <p>{{element.tags}}</p>
-                <p>{{element.date_posted}}</p>
-                <form method="post" action="{% url 'like' pk=element.pk %}" data-post-id="{{ element.pk }}">
-                  {% csrf_token %}
-                  {% if user in element.likes.all %}
-                    <button type="submit">Убрать лайк</button>
-                  {% else %}
-                    <button type="submit">Поставить лайк</button>
-                  {% endif %}
+                <a href="{% url 'post' element.pk %}">
+                    <h3>{{ element.name }}</h3>
+                </a>
+                <p>{{ element.description }}</p>
+                <p>{{ element.author }}</p>
+                <p>{{ element.date_posted }}</p>
+                <form method="post" action="{% url 'add_to_favorites' pk=element.pk %}" data-post-id="{{ element.pk }}">
+                    {% csrf_token %}
+                    {% if user in element.favorites.all %}
+                        <button type="submit">Убрать из избранного</button>
+                    {% else %}
+                        <button type="submit">Добавить в избранное</button>
+                    {% endif %}
                 </form>
+
                 {% if element.img %}
-                    <img height="200px" src="media/{{element.img}}" alt="">
+                    <img height="200px" src="media/{{ element.img }}" alt="">
                 {% endif %}
             </div>
         {% endfor %}

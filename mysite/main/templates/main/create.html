@@ -13,8 +13,8 @@
         {{ form.name }}<br>
         {{ form.description }}<br>
         {{ form.img }}<br>
-        {{ form.category }}<br>
-        {{ form.ingredients }}<br>
+        {{ form.category.as_widget }}<br>
+        {{ form.ingredients.as_widget }}<br>
         {{ form.new_ingredients }}<br>
         <button type="submit" class="btn btn-success">Добавить</button>
         <span>{{error}}</span>

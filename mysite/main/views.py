@@ -4,11 +4,7 @@ from .forms import *
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.views import View
-from django.http import HttpResponseRedirect
-from django.urls import reverse
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.decorators.http import require_http_methods
+
 
 def index(request):
     search_query = request.GET.get('search', '')
@@ -19,16 +15,25 @@ def index(request):
 
     if search_query:
         recipe = recipe.filter(
-            Q(name__icontains=search_query) | Q(description__icontains=search_query) | Q(ingredients__name__icontains=search_query) | Q(category__name__icontains=search_query)
+            Q(name__icontains=search_query) | Q(description__icontains=search_query)
         )
 
     if category:
-        recipe = recipe.filter(category=category)
+        category_obj = get_object_or_404(Category, pk=category)
+        recipe = recipe.filter(category=category_obj)
 
     if ingredient:
-        recipe = recipe.filter(ingredients=ingredient)
+        recipe = recipe.filter(ingredients__name=ingredient)
 
-    return render(request, 'main/index.html', {'title': 'Главная страница сайта', 'recipe': recipe})
+    ingredients = Ingredient.objects.all()  # Получить все ингредиенты из базы данных
+
+    context = {
+        'title': 'Главная страница сайта',
+        'recipe': recipe,
+        'ingredients': ingredients,  # Передать ингредиенты в контекст шаблона
+    }
+
+    return render(request, 'main/index.html', context)
 
 
 def about(request):
@@ -40,10 +45,12 @@ def create(request):
     if request.method == 'POST':
         form = RecipeForm(request.POST, request.FILES)
         if form.is_valid():
-            new_topic = form.save(commit=False)
-            new_topic.author = request.user
-            new_topic.tags = new_topic.tags.title()
-            new_topic.save()
+            new_recipe = form.save(commit=False)
+            new_recipe.author = request.user
+            new_recipe.save()
+
+            form.save()  # Сохранить связи "многие-ко-многим"
+
             return redirect('home')
         else:
             error = 'error form'
@@ -58,9 +65,15 @@ def create(request):
 
 def post(request, id):
     post = get_object_or_404(Recipe, id=id)
-    post.views+=1
+    post.views += 1
     post.save()
-    context = {'post': post}
+    author_profile = post.author.userprofile
+    favorite_posts = post.author.favorites.all()  # Посты, добавленные в избранное создателем поста
+    context = {
+        'post': post,
+        'author_profile': author_profile,
+        'favorite_posts': favorite_posts,
+    }
     return render(request, 'main/post.html', context)
 
 
@@ -68,7 +81,6 @@ def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-
             form.save()
             username = form.cleaned_data.get('username')
             messages.success(request, f'Создан аккаунт {username}!')
@@ -80,30 +92,39 @@ def register(request):
 
 
 @login_required
-def like(request, pk):
+def add_to_favorites(request, pk):
     post = get_object_or_404(Recipe, pk=pk)
     if request.method == 'POST':
-        is_like = False
-
-        for like in post.likes.all():
-            if like == request.user:
-                is_like = True
-                break
-
-        if not is_like:
-            post.likes.add(request.user)
+        if request.user in post.favorites.all():
+            post.favorites.remove(request.user)
         else:
-            post.likes.remove(request.user)
+            post.favorites.add(request.user)
 
     return redirect(request.META.get('HTTP_REFERER'))
 
 @login_required
-def profile(request):
-    profile_form = UserProfileForm(data=request.POST)
+def profile(request, username=None):
+    if username is None:
+        favorites = request.user.favorites.all()
+    else:
+        user = get_object_or_404(User, username=username)
+        favorites = user.favorites.all()
 
-    if profile_form.is_valid():
-        profile = profile_form.save(commit=False)
-        profile.user = request.user
-        if 'photo' in request.FILES:
-            profile.photo = request.FILES['photo']
-    return render(request, 'main/profile.html')
+    try:
+        profile_form = UserProfileForm(instance=request.user.userprofile)
+    except UserProfile.DoesNotExist:
+        profile_form = UserProfileForm()
+
+    if request.method == 'POST':
+        profile_form = UserProfileForm(request.POST, request.FILES, instance=request.user.userprofile)
+        if profile_form.is_valid():
+            profile_form.save()
+            messages.success(request, 'Фото профиля успешно обновлено.')
+            return redirect('profile')
+
+    context = {
+        'favorites': favorites,
+        'profile_form': profile_form,
+    }
+
+    return render(request, 'main/profile.html', context)

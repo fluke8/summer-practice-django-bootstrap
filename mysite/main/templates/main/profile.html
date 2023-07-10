@@ -3,12 +3,31 @@
 {% block content %}
     <div class="content-section">
       <div class="media">
-        <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
+        <img class="rounded-circle account-img" src="{{ user.userprofile.photo.url }}">
         <div class="media-body">
           <h2 class="account-heading">{{ user.username }}</h2>
           <p class="text-secondary">{{ user.email }}</p>
         </div>
       </div>
-      <!-- Здесь будет форма -->
+      <h2>Посты, добавленные в избранное</h2>
+        {% if favorites %}
+            {% for favorite in favorites %}
+                <div class="alert alert-success mt-2">
+                    <a href="{% url 'post' favorite.pk %}"><h3>{{ favorite.name }}</h3></a>
+                    <p>{{ favorite.description }}</p>
+                    <p>{{ favorite.author }}</p>
+                    <p>{{ favorite.date_posted }}</p>
+                    <!-- Остальные поля поста -->
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Вы пока не добавили ни одного поста в избранное.</p>
+{% endif %}
+    <h2>Профиль</h2>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ profile_form.as_p }}
+  <button type="submit">Сохранить</button>
+</form>
     </div>
 {% endblock content %}
