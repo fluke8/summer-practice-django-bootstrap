@@ -14,7 +14,7 @@ def index(request):
     category = request.GET.get('category', '')
     ingredient = request.GET.get('ingredient', '')
 
-    recipe = Recipe.objects.all()
+    recipe = Recipe.objects.select_related('category').prefetch_related('ingredients').all()
 
     if search_query:
         recipe = recipe.filter(
@@ -52,9 +52,6 @@ def create(request):
             new_recipe = form.save(commit=False)
             new_recipe.author = request.user
             new_recipe.save()
-
-            form.save()  # Сохранить связи "многие-ко-многим"
-
             return redirect('home')
         else:
             error = 'error form'
