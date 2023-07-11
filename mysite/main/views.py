@@ -92,8 +92,6 @@ def register(request):
             user = authenticate(request, username=username, password=form.cleaned_data['password1'])
             login(request, user)
 
-            # Создание профиля пользователя
-            UserProfile.objects.create(user=user)
 
             return redirect('home')
     else:
