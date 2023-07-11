@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def index(request):
@@ -92,7 +93,6 @@ def register(request):
             user = authenticate(request, username=username, password=form.cleaned_data['password1'])
             login(request, user)
 
-
             return redirect('home')
     else:
         form = UserRegisterForm()
@@ -111,8 +111,6 @@ def add_to_favorites(request, pk):
     return redirect(request.META.get('HTTP_REFERER'))
 
 
-from django.urls import reverse
-
 @login_required
 def profile(request, username=None):
     if username is None:
@@ -123,7 +121,7 @@ def profile(request, username=None):
 
     try:
         profile_form = UserProfileForm(instance=request.user.userprofile)
-    except UserProfile.DoesNotExist:
+    except ObjectDoesNotExist:
         profile_form = UserProfileForm()
 
     if request.method == 'POST':
@@ -131,7 +129,7 @@ def profile(request, username=None):
         if profile_form.is_valid():
             profile_form.save()
             messages.success(request, 'Фото профиля успешно обновлено.')
-            return redirect(reverse('profile', args=[request.user.username]))  # Передайте имя пользователя в функцию reverse
+            return redirect(reverse('profile', args=[request.user.username]))
 
     context = {
         'favorites': favorites,
