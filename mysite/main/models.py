@@ -46,6 +46,8 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     photo = models.ImageField(default='default.jpg', upload_to='profile_images')
 
+    objects = models.Manager()
+
     def __str__(self):
         return f'{self.user.username} Profile'
 

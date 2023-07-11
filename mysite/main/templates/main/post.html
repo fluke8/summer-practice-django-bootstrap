@@ -15,6 +15,8 @@
     <p>{{ post.author }}</p>
     </a>
     <p>{{ post.date_posted }}</p>
+    <p>{{ post.views }}</p>
+    <p>{{ post.total_added_to_favorites }}</p>
     {% if post.author.userprofile.photo %}  <!-- Проверка наличия аватарки профиля -->
         <img src="{{ post.author.userprofile.photo.url }}" alt="Avatar">  <!-- Отображение аватарки профиля -->
     {% endif %}

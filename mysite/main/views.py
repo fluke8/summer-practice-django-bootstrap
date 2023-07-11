@@ -4,6 +4,8 @@ from .forms import *
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+from django.contrib.auth import authenticate, login
 
 
 def index(request):
@@ -40,6 +42,7 @@ def about(request):
     return render(request, 'main/about.html')
 
 
+@login_required
 def create(request):
     error = ''
     if request.method == 'POST':
@@ -84,7 +87,14 @@ def register(request):
             form.save()
             username = form.cleaned_data.get('username')
             messages.success(request, f'Создан аккаунт {username}!')
-            Profile(user=User.objects.get(username=form.cleaned_data['username']), ).save()
+
+            # Аутентификация пользователя
+            user = authenticate(request, username=username, password=form.cleaned_data['password1'])
+            login(request, user)
+
+            # Создание профиля пользователя
+            UserProfile.objects.create(user=user)
+
             return redirect('home')
     else:
         form = UserRegisterForm()
@@ -101,6 +111,9 @@ def add_to_favorites(request, pk):
             post.favorites.add(request.user)
 
     return redirect(request.META.get('HTTP_REFERER'))
+
+
+from django.urls import reverse
 
 @login_required
 def profile(request, username=None):
@@ -120,7 +133,7 @@ def profile(request, username=None):
         if profile_form.is_valid():
             profile_form.save()
             messages.success(request, 'Фото профиля успешно обновлено.')
-            return redirect('profile')
+            return redirect(reverse('profile', args=[request.user.username]))  # Передайте имя пользователя в функцию reverse
 
     context = {
         'favorites': favorites,
