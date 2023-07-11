@@ -46,14 +46,18 @@
 
     {% if recipe %}
         {% for element in recipe %}
-            <div class="alert alert-warning mt-2">
-                <a href="{% url 'post' element.pk %}">
-                    <h3>{{ element.name }}</h3>
-                </a>
-                <p>{{ element.description }}</p>
-                <p>{{ element.author }}</p>
-                <p>{{ element.date_posted }}</p>
-                <form method="post" action="{% url 'add_to_favorites' pk=element.pk %}" data-post-id="{{ element.pk }}">
+            <div class="card mt-3">
+            {% if element.img %}
+                    <img height="200px" src="media/{{ element.img }}" class="card-img-top" alt="фото блюда">
+                {% endif %}
+              <div class="card-body">
+                <h5 class="card-title"><a href="{% url 'post' element.pk %}">{{ element.name }}</a></h5>
+                <p class="card-text">{{ element.description }}</p>
+              <a href="{% url 'profile' element.author.username %}">
+                  <p class="card-text">{{ element.author }}</p>
+              </a>
+                <p class="card-text"><small class="text-muted">{{ element.date_posted }}</small></p>
+                  <form method="post" action="{% url 'add_to_favorites' pk=element.pk %}" data-post-id="{{ element.pk }}">
                     {% csrf_token %}
                     {% if user in element.favorites.all %}
                         <button type="submit">Убрать из избранного</button>
@@ -61,6 +65,16 @@
                         <button type="submit">Добавить в избранное</button>
                     {% endif %}
                 </form>
+              </div>
+            </div>
+            <div class="alert alert-warning mt-2">
+
+                    <h3> <a href="{% url 'post' element.pk %}">{{ element.name }}</a></h3>
+
+                <p>{{ element.description }}</p>
+                <p>{{ element.author }}</p>
+                <p>{{ element.date_posted }}</p>
+
 
                 {% if element.img %}
                     <img height="200px" src="media/{{ element.img }}" alt="">

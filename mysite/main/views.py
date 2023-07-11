@@ -55,7 +55,6 @@ def create(request):
             return redirect('home')
         else:
             error = 'error form'
-
     form = RecipeForm()
     context = {
         'form': form,
@@ -114,6 +113,7 @@ def profile(request, username=None):
         favorites = request.user.favorites.all()
     else:
         user = get_object_or_404(User, username=username)
+        viewing_own_profile = request.user == user
         favorites = user.favorites.all()
 
     try:
@@ -129,6 +129,8 @@ def profile(request, username=None):
             return redirect(reverse('profile', args=[request.user.username]))
 
     context = {
+        'user': user,
+        'viewing_own_profile': viewing_own_profile,
         'favorites': favorites,
         'profile_form': profile_form,
     }
