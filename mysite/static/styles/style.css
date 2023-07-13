@@ -120,3 +120,7 @@ a {
 .recipe-form button[type="submit"]:hover {
     background-color: #F57C00;
 }
+
+.width100 {
+    width: 100%;
+}
