@@ -8,79 +8,93 @@
 {% block content %}
     <div class="container mt-3 d-flex flex-column">
 
-    <h1>Главная страница</h1>
-    <form method="get" action="{% url 'home' %}" class="mt-4">
-        <div class="row">
-            <div class="col-md-4">
-                <input type="text" name="search" placeholder="Поиск..." class="form-control">
-            </div>
-            <div class="col-md-3">
-                <select name="category" class="form-select">
-                    <option value="">Все категории</option>
-                    <option value="1">Итальянская кухня</option>
-                    <option value="2">Французская кухня</option>
-                    <option value="3">Китайская кухня</option>
-                    <option value="4">Японская кухня</option>
-                    <option value="5">Индийская кухня</option>
-                    <option value="6">Мексиканская кухня</option>
-                    <option value="7">Таиландская кухня</option>
-                    <option value="8">Греческая кухня</option>
-                    <option value="9">Испанская кухня</option>
-                    <option value="10">Марокканская кухня</option>
-                    <option value="11">Турецкая кухня</option>
-                    <option value="12">Бразильская кухня</option>
-                    <option value="13">Русская кухня</option>
-                    <option value="14">Аргентинская кухня</option>
-                    <option value="15">Шведская кухня</option>
-                    <option value="16">Южноиндийская кухня</option>
-                    <option value="17">Корейская кухня</option>
-                    <option value="18">Вьетнамская кухня</option>
-                    <option value="19">Ливанская кухня</option>
-                    <option value="20">Эфиопская кухня</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <select name="ingredient" id="ingredient" class="form-select">
-                    <option value="">Все ингредиенты</option>
-                    {% for ingredient in ingredients %}
-                        <option value="{{ ingredient.name }}">{{ ingredient.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary width100">Применить</button>
-            </div>
-        </div>
-    </form>
-    <div class="container  mt-3 d-flex flex-row card-wrapper align-items-baseline flex-wrap ">
-    {% if recipe %}
-        {% for element in recipe %}
-            <div class="card mt-3 me-3">
-                {% if element.img %}
-                    <img height="200px" src="media/{{ element.img }}" class="card-img-top" alt="фото блюда">
-                {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title"><a href="{% url 'post' element.pk %}">{{ element.name }}</a></h5>
-                    <p class="card-text">{{ element.description }}</p>
-                    <a href="{% url 'profile' element.author.username %}">
-                        <p class="card-text">{{ element.author }}</p>
-                    </a>
-                    <p class="card-text"><small class="text-muted">{{ element.date_posted }}</small></p>
-                    <form method="post" action="{% url 'add_to_favorites' pk=element.pk %}"
-                          data-post-id="{{ element.pk }}">
-                        {% csrf_token %}
-                        {% if user in element.favorites.all %}
-                            <button type="submit" class="btn btn-danger">Убрать из избранного</button>
-                        {% else %}
-                            <button type="submit" class="btn btn-primary">Добавить в избранное</button>
-                        {% endif %}
-                    </form>
+        <h1>Главная страница</h1>
+        <form method="get" action="{% url 'home' %}" class="mt-4">
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="text" name="search" placeholder="Поиск..." class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <select name="category" class="form-select">
+                        <option value="">Все категории</option>
+                        <option value="1">Итальянская кухня</option>
+                        <option value="2">Французская кухня</option>
+                        <option value="3">Китайская кухня</option>
+                        <option value="4">Японская кухня</option>
+                        <option value="5">Индийская кухня</option>
+                        <option value="6">Мексиканская кухня</option>
+                        <option value="7">Таиландская кухня</option>
+                        <option value="8">Греческая кухня</option>
+                        <option value="9">Испанская кухня</option>
+                        <option value="10">Марокканская кухня</option>
+                        <option value="11">Турецкая кухня</option>
+                        <option value="12">Бразильская кухня</option>
+                        <option value="13">Русская кухня</option>
+                        <option value="14">Аргентинская кухня</option>
+                        <option value="15">Шведская кухня</option>
+                        <option value="16">Южноиндийская кухня</option>
+                        <option value="17">Корейская кухня</option>
+                        <option value="18">Вьетнамская кухня</option>
+                        <option value="19">Ливанская кухня</option>
+                        <option value="20">Эфиопская кухня</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="ingredient" id="ingredient" class="form-select" multiple>
+                        <option value="">Все ингредиенты</option>
+                        {% for ingredient in ingredients %}
+                            <option value="{{ ingredient.name }}">{{ ingredient.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary width100">Применить</button>
                 </div>
             </div>
-        {% endfor %}
-    {% else %}
-        <p>Нет записей</p>
-    {% endif %}
-    </div>
+        </form>
+        <div class="container d-flex flex-row card-wrapper align-items-baseline flex-wrap">
+            {% if recipe %}
+                {% for post in recipe %}
+                    <div class="card my-2 mx-2">
+                        {% if post.img %}
+                            <a href="{% url 'post' post.pk %}">
+                                <img height="200px" src="media/{{ post.img }}" class="card-img-top" alt="фото блюда">
+                            </a>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title"><a href="{% url 'post' post.pk %}">{{ post.name }}</a></h5>
+                            <a href="{% url 'profile' post.author.username %}">
+                                <p class="card-text">{{ post.author }}</p>
+                            </a>
+                            <p>{{ post.views }}</p>
+                            <div class="date-favorites d-flex flex-row justify-content-between mt-1 align-items-center">
+                                <p class="card-text m-0"><small class="text-muted">{{ post.date_posted.date }}</small>
+                                </p>
+                                <form method="post" action="{% url 'add_to_favorites' pk=post.pk %}"
+                                      data-post-id="{{ post.pk }}">
+                                    {% csrf_token %}
+                                    {% if user in post.favorites.all %}
+                                        <button type="submit"
+                                                class="btn btn-danger remove-from-favorite btn-favorite d-flex flex-row">
+                                            <img class="heart-liked" src="{% static 'icons/heart-liked.png' %}"
+                                                 alt="Heart Liked">
+                                            <b>{{ post.total_added_to_favorites }}</b>
+                                        </button>
+                                    {% else %}
+                                        <button type="submit"
+                                                class="btn btn-primary add-to-favorite btn-favorite d-flex flex-row">
+                                            <img class="heart" src="{% static 'icons/heart.png' %}" alt="Heart">
+                                            <b>{{ post.total_added_to_favorites }}</b>
+                                        </button>
+                                    {% endif %}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Нет записей</p>
+            {% endif %}
+        </div>
     </div>
 {% endblock %}

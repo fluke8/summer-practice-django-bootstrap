@@ -25,10 +25,16 @@ def index(request):
         category_obj = get_object_or_404(Category, pk=category)
         recipe = recipe.filter(category=category_obj)
 
+    ingredients = Ingredient.objects.all()
+
     if ingredient:
         recipe = recipe.filter(ingredients__name=ingredient)
+        ingredient_filter = Q()
+        for ingredient_name in ingredients:
+            ingredient_filter |= Q(ingredients__name=ingredient_name)
+        recipe = recipe.filter(ingredient_filter)
 
-    ingredients = Ingredient.objects.all()  # Получить все ингредиенты из базы данных
+    recipe = recipe.distinct()
 
     context = {
         'title': 'Главная страница сайта',
