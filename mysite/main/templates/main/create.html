@@ -5,10 +5,8 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
+    <div class="container d-flex flex-column align-items-center justify-content-center">
         <h1>Создать рецепт</h1>
-        <p>Текст</p>
-
         <form method="post" enctype="multipart/form-data" class="recipe-form">
             {% csrf_token %}
             {% crispy form %}

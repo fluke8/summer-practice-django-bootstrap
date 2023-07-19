@@ -86,7 +86,8 @@ a {
 }
 
 .recipe-form {
-    max-width: 500px;
+    max-width: 60rem;
+
     margin: 0 auto;
     padding: 20px;
     background-color: #f5f5f5;
@@ -126,7 +127,6 @@ a {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    background: url("../icons/right-arrow.png") no-repeat right center / 20px;
 }
 
 .recipe-form button[type="submit"] {
@@ -172,4 +172,8 @@ a {
 
 .settings-img-button {
     width: 150%;
+}
+
+.dropdown ul{
+    z-index: 9999999999;
 }

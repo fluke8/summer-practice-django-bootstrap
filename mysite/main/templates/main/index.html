@@ -40,12 +40,20 @@
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <select name="ingredient" id="ingredient" class="form-select" multiple>
+                <div class="dropdown">
+  <button class="dropdown-toggle form-select" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+    Выбрать ингредиенты
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+    <li><select name="ingredient" id="ingredient" class="form-select" multiple>
                         <option value="">Все ингредиенты</option>
                         {% for ingredient in ingredients %}
                             <option value="{{ ingredient.name }}">{{ ingredient.name }}</option>
                         {% endfor %}
-                    </select>
+                    </select></li>
+  </ul>
+</div>
+
                 </div>
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-primary width100">Применить</button>
