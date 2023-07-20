@@ -33,7 +33,8 @@ body{
 }
 
 .card-wrapper {
-    justify-content: center;
+    justify-content: start;
+    width: fit-content;
 }
 
 .account-img {
@@ -55,6 +56,8 @@ a {
 
 .card {
     width: 18rem;
+    justify-self: left;
+    margin: 10px!important;
 }
 
 .card a:hover {
@@ -222,6 +225,7 @@ nav a:hover{
 
 .about-top-block .row > div{
     max-height: 100%;
+    max-width: 100%;
     display: flex;
     color: white;
     justify-content: center;
@@ -231,8 +235,41 @@ nav a:hover{
 
 .about-top-block img{
     max-height: 100%;
+    max-width: 100%;
 }
 
 .btn-primary{
     background-color: #0F7173;
+}
+
+.that-form-with-arrow{
+    float: left;
+}
+
+.that-form-with-arrow::after{
+    display: none;
+}
+
+.block{
+    display: inline-block;
+}
+
+.about-btn-block button{
+    color: white;
+    background-color: inherit;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+}
+
+.about-btn-block button:hover{
+    color: grey;
+}
+
+.images-row{
+    height: 20rem;
+    align-content: start;
+}
+
+.images-row img{
+    max-height: 100%;
+    width: auto;
 }
