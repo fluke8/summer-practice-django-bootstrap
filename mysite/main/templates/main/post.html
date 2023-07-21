@@ -1,24 +1,55 @@
 {% extends 'main/base.html' %}
-
+{% load static %}
 {% block title %}
     {{ post.name }}
 {% endblock %}
 
 {% block content %}
-<div class="alert alert-warning mt-2">
+    <div class="container mt-3 justify-content-center d-flex">
+        <div class="mt-2 post-wrapper col-xl-6 d-flex flex-column">
+            <div class="name-describe-wrapper">
+                <img src="../media/{{ post.img }}" alt="post-image" class="post-image">
+                <small>Название</small>
+                <h3>{{ post.name }}</h3>
+                <small>Описание</small>
+                <p>{{ post.description }}</p>
 
- <!-- Ссылка на профиль создателя поста -->
-        <h3>{{ post.name }}</h3>
+                <small>Ингредиенты</small>
+                <p>{{ post.get_ingredients_display }}</p>
+                <small>Автор</small>
+                <a href="{% url 'profile' post.author.username %}">
+                    <p>{{ post.author }}</p>
+                </a>
+            </div>
 
-    <p>{{ post.description }}</p>
-    <a href="{% url 'profile' post.author.username %}">
-    <p>{{ post.author }}</p>
-    </a>
-    <p>{{ post.date_posted }}</p>
-    <p>{{ post.views }}</p>
-    <p>{{ post.total_added_to_favorites }}</p>
-    {% if post.author.userprofile.photo %}  <!-- Проверка наличия аватарки профиля -->
-        <img src="{{ post.author.userprofile.photo.url }}" alt="Avatar">  <!-- Отображение аватарки профиля -->
-    {% endif %}
-
+            <div class="date-favorites d-flex flex-row justify-content-between mt-1 align-items-center mt-auto">
+                <p class="card-text m-0"><small class="text-muted">{{ post.date_posted.date }}</small>
+                </p>
+                <div class="row ">
+                    <div class="views-block d-flex flex-row">
+                        <img src="{% static 'icons/view.png' %}" alt="" class="">
+                        <p class="card-text m-0">{{ post.views }}</p>
+                    </div>
+                    <form method="post" action="{% url 'add_to_favorites' pk=post.pk %}"
+                          data-post-id="{{ post.pk }}" class="w-auto">
+                        {% csrf_token %}
+                        {% if user in post.favorites.all %}
+                            <button type="submit"
+                                    class="btn btn-danger remove-from-favorite btn-favorite d-flex flex-row">
+                                <img class="heart-liked" src="{% static 'icons/heart-liked.png' %}"
+                                     alt="Heart Liked">
+                                <b>{{ post.total_added_to_favorites }}</b>
+                            </button>
+                        {% else %}
+                            <button type="submit"
+                                    class="btn btn-primary add-to-favorite btn-favorite d-flex flex-row">
+                                <img class="heart" src="{% static 'icons/heart.png' %}" alt="Heart">
+                                <b>{{ post.total_added_to_favorites }}</b>
+                            </button>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

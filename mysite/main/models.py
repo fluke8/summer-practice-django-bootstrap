@@ -41,6 +41,11 @@ class Recipe(models.Model):
     def is_favorited_by(self, user):
         return user in self.favorites.all()
 
+    def get_ingredients_display(self):
+        ingredients_list = [ingredient.name for ingredient in self.ingredients.all()]
+        print("Ingredients List:", ingredients_list)
+        return ", ".join(ingredients_list)
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

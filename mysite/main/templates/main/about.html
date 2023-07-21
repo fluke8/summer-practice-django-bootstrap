@@ -1,38 +1,60 @@
 {% extends 'main/base.html' %}
 {% load static %}
 {% block title %}
-О нас
+    О нас
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid about-top-block">
-    <div class="row">
-        <div class="col-6 flex-column">
-            <h1>Вкусные рецепты легко</h1>
-            <div class="about-btn-block">
-                <button class="btn">Начните сейчас</button>
-                <button class="btn">Обзор рецептов</button>
+    <div class="container-fluid about-top-block">
+        <div class="row justify-content-center">
+            <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-5 col-sm-6 flex-column">
+                <h1>Вкусные рецепты легко</h1>
+                <div class="about-btn-block">
+                    <button class="btn">Начните сейчас</button>
+                    <button class="btn">Обзор рецептов</button>
+                </div>
+            </div>
+            <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-5 col-sm-6 image-about-block">
+                <img src="{% static 'images/about-image.png' %}" alt="" class="about-image">
             </div>
         </div>
-        <div class="col-6 image-about-block">
-            <img src="{% static 'images/about-image.png' %}" alt="" class="about-image">
+    </div>
+    <div class="container about-mid-block mt-5 col-xxl-6 col-xl-8 col-lg-8 col-md-10 col-sm-12">
+        <h2>О нас</h2>
+        <br>
+        <p>Наш сайт предназначен для тех, кто любит готовить вкусную и разнообразную пищу, но не всегда знает, что
+            приготовить. Мы собрали огромную коллекцию рецептов, от классических блюд до экзотических кулинарных
+            изысков. На
+            нашем сайте вы можете найти рецепты для завтрака, обеда, ужина и десерта.</p>
+        <p>Мы понимаем, что каждый человек имеет свои предпочтения в еде, поэтому мы создали удобный поиск по
+            параметрам. Вы
+            можете выбрать тип блюда, продукты, которые вы хотите использовать или исключить из рецепта, а также время
+            приготовления и уровень сложности.</p>
+        <div class="row flex-row h-3 images-row justify-content-between my-3">
+            <img src="{% static 'images/food-img-1.png' %}" alt="">
+            <img src="{% static 'images/food-img-2.png' %}" alt="">
+            <img src="{% static 'images/food-img-3.png' %}" alt="">
+        </div>
+        <p>
+            Если вы нашли рецепт, который вам понравился, вы можете зарегистрироваться на сайте и добавить его в
+            избранное. Также у нас есть возможность оставлять комментарии и делиться своим опытом приготовления блюда.
+        </p>
+
+        <p>Мы постоянно обновляем нашу коллекцию рецептов и следим за тенденциями в кулинарии. Наша цель - помочь вам
+            сделать приготовление еды легким и увлекательным процессом.
+        </p>
+        <p>Спасибо, что выбрали наш сайт для поиска рецептов. Мы надеемся, что вы найдете здесь много интересных и
+            вкусных блюд для своей кухни.
+        </p>
+        <div class="about-bottom">
+            <h1 class="">Хотите добавить свой рецепт?
+                Присоединяйтесь к нам!</h1>
+        </div>
+        <div class="register-btn-block">
+            <a href="{% url 'register' %}">
+                <button class="btn register-btn" onclick="">Регистрация</button>
+            </a>
         </div>
     </div>
-</div>
-<div class="container mt-5 col-xxl-6 col-xl-8 col-lg-8 col-md-10 col-sm-12">
-    <h2>О нас</h2>
-    <br>
-    <p>Наш сайт предназначен для тех, кто любит готовить вкусную и разнообразную пищу, но не всегда знает, что
-        приготовить. Мы собрали огромную коллекцию рецептов, от классических блюд до экзотических кулинарных изысков. На
-        нашем сайте вы можете найти рецепты для завтрака, обеда, ужина и десерта.</p>
-    <p>Мы понимаем, что каждый человек имеет свои предпочтения в еде, поэтому мы создали удобный поиск по параметрам. Вы
-        можете выбрать тип блюда, продукты, которые вы хотите использовать или исключить из рецепта, а также время
-        приготовления и уровень сложности.</p>
-    <div class="row flex-row h-3 images-row justify-content-between">
-        <img src="{% static 'images/food-img-1.png' %}" alt="">
-        <img src="{% static 'images/food-img-2.png' %}" alt="">
-        <img src="{% static 'images/food-img-3.png' %}" alt="">
-    </div>
-</div>
 {% endblock %}
 

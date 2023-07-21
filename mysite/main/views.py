@@ -58,10 +58,20 @@ def create(request):
             new_recipe = form.save(commit=False)
             new_recipe.author = request.user
             new_recipe.save()
+
+            # Получаем данные об ингредиентах из формы и сохраняем их
+            ingredients = request.POST.getlist('ingredients')
+            for ingredient_name in ingredients:
+                ingredient, _ = Ingredient.objects.get_or_create(name=ingredient_name)
+                new_recipe.ingredients.add(ingredient)
+
+            form.save_m2m()  # Сохраняем связи many-to-many
+
             return redirect('home')
         else:
             error = 'error form'
-    form = RecipeForm()
+    else:
+        form = RecipeForm()
     context = {
         'form': form,
         'error': error

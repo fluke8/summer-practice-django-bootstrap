@@ -76,10 +76,15 @@
                     <a href="{% url 'profile' post.author.username %}">
                         <p class="card-text">{{ post.author }}</p>
                     </a>
-                    <p>{{ post.views }}</p>
+                <p class="card-text my-1">{{ post.get_ingredients_display }}</p>
                     <div class="date-favorites d-flex flex-row justify-content-between mt-1 align-items-center">
                         <p class="card-text m-0"><small class="text-muted">{{ post.date_posted.date }}</small>
                         </p>
+
+                        <div class="views-block d-flex flex-row">
+                        <img src="{% static 'icons/view.png' %}" alt="">
+                        <p class="card-text m-0">{{ post.views }}</p>
+                        </div>
                         <form method="post" action="{% url 'add_to_favorites' pk=post.pk %}"
                               data-post-id="{{ post.pk }}">
                             {% csrf_token %}
