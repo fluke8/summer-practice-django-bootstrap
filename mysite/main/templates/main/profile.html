@@ -32,123 +32,139 @@
                 {% endif %}
             </div>
             <div class="col-lg-8 col-xl-10 d-flex flex-column align-items-center justify-content-center">
-                {% if viewing_own_profile %}
-                    <h2>Посты, добавленные в избранное</h2>
 
-                    {% if favorites %}
-                        <div class="container card-wrapper d-flex flex-wrap p-0">
-                            {% for post in favorites %}
+                <h2>Посты, добавленные в избранное</h2>
 
-                                <div id="card" class="card my-2 mx-2">
-                                    {% if post.img %}
-                                        <a href="{% url 'post' post.pk %}">
-                                            <img height="200px" src="../../media/{{ post.img }}" class="card-img-top"
-                                                 alt="фото блюда">
-                                        </a>
-                                    {% endif %}
-                                    <div class="card-body">
-                                        <h5 class="card-title"><a href="{% url 'post' post.pk %}">{{ post.name }}</a>
-                                        </h5>
-                                        <a href="{% url 'profile' post.author.username %}">
-                                            <p class="card-text">{{ post.author }}</p>
-                                        </a>
-                                        <p class="card-text my-1">{{ post.get_ingredients_display }}</p>
-                                        <div class="date-favorites d-flex flex-row justify-content-between mt-1 align-items-center">
-                                            <p class="card-text m-0"><small
-                                                    class="text-muted">{{ post.date_posted.date }}</small>
-                                            </p>
+                {% if favorites %}
+                    <div class="container card-wrapper d-flex flex-wrap p-0 align-items-start">
+                        {% for post in favorites %}
 
-                                            <div class="views-block d-flex flex-row">
-                                                <img src="{% static 'icons/view.png' %}" alt="">
-                                                <p class="card-text m-0">{{ post.views }}</p>
-                                            </div>
-                                            <form method="post" action="{% url 'add_to_favorites' pk=post.pk %}"
-                                                  data-post-id="{{ post.pk }}">
-                                                {% csrf_token %}
-                                                {% if user in post.favorites.all %}
-                                                    <button type="submit"
-                                                            class="btn btn-danger remove-from-favorite btn-favorite d-flex flex-row">
-                                                        <img class="heart-liked"
-                                                             src="{% static 'icons/heart-liked.png' %}"
-                                                             alt="Heart Liked">
-                                                        <b>{{ post.total_added_to_favorites }}</b>
-                                                    </button>
-                                                {% else %}
-                                                    <button type="submit"
-                                                            class="btn btn-primary add-to-favorite btn-favorite d-flex flex-row">
-                                                        <img class="heart" src="{% static 'icons/heart.png' %}"
-                                                             alt="Heart">
-                                                        <b>{{ post.total_added_to_favorites }}</b>
-                                                    </button>
-                                                {% endif %}
-                                            </form>
+                            <div id="card" class="card my-2 mx-2">
+                                {% if post.img %}
+                                    <a href="{% url 'post' post.pk %}">
+                                        <img height="200px" src="../../media/{{ post.img }}" class="card-img-top"
+                                             alt="фото блюда">
+                                    </a>
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title"><a href="{% url 'post' post.pk %}">{{ post.name }}</a>
+                                    </h5>
+                                    <a href="{% url 'profile' post.author.username %}">
+                                        <p class="card-text">{{ post.author }}</p>
+                                    </a>
+                                    <p class="card-text my-1">{{ post.get_ingredients_display }}</p>
+                                    <div class="date-favorites d-flex flex-row justify-content-between mt-1 align-items-center">
+                                        <p class="card-text m-0"><small
+                                                class="text-muted">{{ post.date_posted.date }}</small>
+                                        </p>
+
+                                        <div class="views-block d-flex flex-row">
+                                            <img src="{% static 'icons/view.png' %}" alt="">
+                                            <p class="card-text m-0">{{ post.views }}</p>
                                         </div>
+                                        <form method="post" action="{% url 'add_to_favorites' pk=post.pk %}"
+                                              data-post-id="{{ post.pk }}">
+                                            {% csrf_token %}
+                                            {% if request.user in post.favorites.all %}
+                                                <button type="submit"
+                                                        class="btn btn-danger remove-from-favorite btn-favorite d-flex flex-row">
+                                                    <img class="heart-liked"
+                                                         src="{% static 'icons/heart-liked.png' %}"
+                                                         alt="Heart Liked">
+                                                    <b>{{ post.total_added_to_favorites }}</b>
+                                                </button>
+                                            {% else %}
+                                                <button type="submit"
+                                                        class="btn btn-primary add-to-favorite btn-favorite d-flex flex-row">
+                                                    <img class="heart" src="{% static 'icons/heart.png' %}"
+                                                         alt="Heart">
+                                                    <b>{{ post.total_added_to_favorites }}</b>
+                                                </button>
+                                            {% endif %}
+                                        </form>
                                     </div>
                                 </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <p>Вы пока не добавили ни одного поста в избранное.</p>
-                    {% endif %}
-
+                            </div>
+                        {% endfor %}
+                    </div>
                 {% else %}
-                    <h2>Посты, добавленные в избранное</h2>
-                    {% if favorites %}
-                        <div class="container card-wrapper d-flex flex-wrap p-0">
-                            {% for post in favorites %}
-                                <div id="card" class="card my-2 mx-2">
-                                    {% if post.img %}
-                                        <a href="{% url 'post' post.pk %}">
-                                            <img height="200px" src="../../media/{{ post.img }}" class="card-img-top"
-                                                 alt="фото блюда">
-                                        </a>
-                                    {% endif %}
-                                    <div class="card-body">
-                                        <h5 class="card-title"><a href="{% url 'post' post.pk %}">{{ post.name }}</a>
-                                        </h5>
-                                        <a href="{% url 'profile' post.author.username %}">
-                                            <p class="card-text">{{ post.author }}</p>
-                                        </a>
-                                        <p class="card-text my-1">{{ post.get_ingredients_display }}</p>
-                                        <div class="date-favorites d-flex flex-row justify-content-between mt-1 align-items-center">
-                                            <p class="card-text m-0"><small
-                                                    class="text-muted">{{ post.date_posted.date }}</small>
-                                            </p>
-
-                                            <div class="views-block d-flex flex-row">
-                                                <img src="{% static 'icons/view.png' %}" alt="">
-                                                <p class="card-text m-0">{{ post.views }}</p>
-                                            </div>
-                                            <form method="post" action="{% url 'add_to_favorites' pk=post.pk %}"
-                                                  data-post-id="{{ post.pk }}">
-                                                {% csrf_token %}
-                                                {% if user in post.favorites.all %}
-                                                    <button type="submit"
-                                                            class="btn btn-danger remove-from-favorite btn-favorite d-flex flex-row">
-                                                        <img class="heart-liked"
-                                                             src="{% static 'icons/heart-liked.png' %}"
-                                                             alt="Heart Liked">
-                                                        <b>{{ post.total_added_to_favorites }}</b>
-                                                    </button>
-                                                {% else %}
-                                                    <button type="submit"
-                                                            class="btn btn-primary add-to-favorite btn-favorite d-flex flex-row">
-                                                        <img class="heart" src="{% static 'icons/heart.png' %}"
-                                                             alt="Heart">
-                                                        <b>{{ post.total_added_to_favorites }}</b>
-                                                    </button>
-                                                {% endif %}
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
+                    {% if viewing_own_profile %}
+                        <p>Вы пока не добавили ни одного поста в избранное.</p>
                     {% else %}
                         <p>{{ user.username }} пока не добавил ни одного поста в избранное.</p>
                     {% endif %}
                 {% endif %}
+                {% if viewing_own_profile %}
+                <h2>Ваши рецепты</h2>
+                {% else %}
+                <h2>Рецепты пользователя {{ user.username }}</h2>
+                {% endif %}
+                {% if user_recipes %}
+                    <div class="container card-wrapper d-flex flex-wrap p-0 align-items-start">
+                        {% for recipe in user_recipes %}
+                            <div id="card" class="card my-2 mx-2">
+                                {% if recipe.img %}
+                                    <a href="{% url 'post' recipe.pk %}">
+                                        <img height="200px" src="../../media/{{ recipe.img }}" class="card-img-top"
+                                             alt="фото блюда">
+                                    </a>
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title"><a href="{% url 'post' recipe.pk %}">{{ recipe.name }}</a>
+                                    </h5>
+                                    <a href="{% url 'profile' recipe.author.username %}">
+                                        <p class="card-text">{{ recipe.author }}</p>
+                                    </a>
+                                    <p class="card-text my-1">{{ recipe.get_ingredients_display }}</p>
+                                    <div class="date-favorites d-flex flex-row justify-content-between mt-1 align-items-center">
+                                        <p class="card-text m-0"><small
+                                                class="text-muted">{{ recipe.date_posted.date }}</small>
+                                        </p>
+
+                                        <div class="views-block d-flex flex-row">
+                                            <img src="{% static 'icons/view.png' %}" alt="">
+                                            <p class="card-text m-0">{{ recipe.views }}</p>
+                                        </div>
+                                        <form method="post" action="{% url 'add_to_favorites' pk=recipe.pk %}"
+                                              data-post-id="{{ recipe.pk }}">
+                                            {% csrf_token %}
+                                            {% if request.user in recipe.favorites.all %}
+                                                <button type="submit"
+                                                        class="btn btn-danger remove-from-favorite btn-favorite d-flex flex-row">
+                                                    <img class="heart-liked"
+                                                         src="{% static 'icons/heart-liked.png' %}"
+                                                         alt="Heart Liked">
+                                                    <b>{{ recipe.total_added_to_favorites }}</b>
+                                                </button>
+                                            {% else %}
+                                                <button type="submit"
+                                                        class="btn btn-primary add-to-favorite btn-favorite d-flex flex-row">
+                                                    <img class="heart" src="{% static 'icons/heart.png' %}"
+                                                         alt="Heart">
+                                                    <b>{{ recipe.total_added_to_favorites }}</b>
+                                                </button>
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                    {% endfor %}
+                    </div>
+                    </div>
+                {% else %}
+                    {% if viewing_own_profile %}
+                        <p>Вы еще не добавили ни одного рецепта.</p>
+                    {% else %}
+                        <p>Он еще не добавили ни одного рецепта.</p>
+                    {% endif %}
+                {% endif %}
             </div>
+
         </div>
+
     </div>
+
+
 {% endblock content %}

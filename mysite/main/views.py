@@ -59,10 +59,12 @@ def create(request):
             new_recipe.author = request.user
             new_recipe.save()
 
-            # Получаем данные об ингредиентах из формы и сохраняем их
-            ingredients = request.POST.getlist('ingredients')
-            for ingredient_name in ingredients:
-                ingredient, _ = Ingredient.objects.get_or_create(name=ingredient_name)
+            # Получаем данные об ингредиентах из формы и сохраняем только существующие ингредиенты
+            ingredients_names = request.POST.getlist('ingredients')
+            existing_ingredients = Ingredient.objects.filter(name__in=ingredients_names)
+
+            # Добавляем только существующие ингредиенты в рецепт
+            for ingredient in existing_ingredients:
                 new_recipe.ingredients.add(ingredient)
 
             form.save_m2m()  # Сохраняем связи many-to-many
@@ -137,6 +139,8 @@ def profile(request, username=None):
     except ObjectDoesNotExist:
         profile_form = UserProfileForm()
 
+    user_recipes = Recipe.objects.filter(author=user)
+
     if request.method == 'POST':
         profile_form = UserProfileForm(request.POST, request.FILES, instance=request.user.userprofile)
         if profile_form.is_valid():
@@ -148,6 +152,7 @@ def profile(request, username=None):
         'user': user,
         'viewing_own_profile': viewing_own_profile,
         'favorites': favorites,
+        'user_recipes': user_recipes,  # Add user's own recipes to the context
         'profile_form': profile_form,
     }
 

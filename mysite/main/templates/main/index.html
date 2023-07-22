@@ -62,7 +62,8 @@
         </div>
     </form>
         {% if recipe %}
-        <div id="card-wrapper" class="card-wrapper d-inline-flex mx-auto flex-row align-items-start flex-wrap">
+        <div id="card-wrapper" class="container card-wrapper d-inline-flex mx-auto flex-row align-items-start flex-wrap">
+
             {% for post in recipe %}
 
             <div id="card" class="card my-2 mx-2">
@@ -73,9 +74,9 @@
                 {% endif %}
                 <div class="card-body">
                     <h5 class="card-title"><a href="{% url 'post' post.pk %}">{{ post.name }}</a></h5>
-                    <a href="{% url 'profile' post.author.username %}">
-                        <p class="card-text">{{ post.author }}</p>
-                    </a>
+
+                        <p class="card-text my-1"><a href="{% url 'profile' post.author.username %}">{{ post.author }}</a></p>
+
                 <p class="card-text my-1">{{ post.get_ingredients_display }}</p>
                     <div class="date-favorites d-flex flex-row justify-content-between mt-1 align-items-center">
                         <p class="card-text m-0"><small class="text-muted">{{ post.date_posted.date }}</small>
